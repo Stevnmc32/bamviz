@@ -1,17 +1,15 @@
-use std::env;
-use midly::Smf;
+pub mod video;
+
+use std::process;
+
 
 fn main() {
-    let args: Vec<_> = env::args().collect();
-    if args.len() > 1 {
-        println!("The first argument is {}", args[1]);
-    }
+    let sdl_scene=unsafe{bamviz::video::SdlScene::build().unwrap_or_else(|err|{
+        eprintln!("Error loading Sdl scene: {err}");
+        process::exit(1);
+    })};
+
     
-    let file:&str = &args[1];
-
-    let smf = Smf::parse(include_bytes!(file)).expect("Failed to read midi file!");
-
-    for (i, track) in smf.tracks.iter().enumerate() {
-        println!("track {} has {} events", i, track.len());
-    }
+    
+    bamviz::run(sdl_scene);
 }
