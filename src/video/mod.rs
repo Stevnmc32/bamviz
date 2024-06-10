@@ -39,7 +39,7 @@ impl SdlScene{
         Ok(window)
     }
 
-    pub unsafe fn build()->Result<SdlScene,Box<dyn Error>>{
+    pub fn build()->Result<SdlScene,Box<dyn Error>>{
         let sdl_context = sdl2::init()?;
 
         let video_subsystem = sdl_context.video()?;
@@ -52,7 +52,9 @@ impl SdlScene{
         
         let event_pump = sdl_context.event_pump()?;
 
-        let font_and_metadata=font::FontAndMetadata::build(&ttf_context)?;
+        let font_and_metadata=unsafe {
+            font::FontAndMetadata::build(&ttf_context)?
+        };
 
         Ok(SdlScene{
             sdl_context,
